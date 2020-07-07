@@ -27,7 +27,8 @@ run.ACE <- function(tree, character, algorithm, model = "ER") {
         taxa_char <- as.numeric(tokens %in% taxa)
         ## If no match, make equiprobalbe
         if(sum(taxa_char) == 0) {
-            return(rep(1/length(tokens), length(tokens)))
+            #return(rep(1/length(tokens), length(tokens)))
+            return(rep(1.0, length(tokens))) # This is the corrected tip partials
         } else {
             return(taxa_char)
         }
@@ -72,7 +73,8 @@ run.ACE <- function(tree, character, algorithm, model = "ER") {
 plot.ACE <- function(tree_plot, ace, trees_ace, col = c("blue", "orange"), type = "pie", type.size = 0.5, tip.size = 0.5, state.names, legend.pos, ...) {
 
     ## Plot the tree_plot
-    plot(tree_plot, cex = tip.size, ...)
+    # Don't plot with branch lengths to retain readability (requires plot.phylo disambiguation, I think)
+    plot(tree_plot, cex = tip.size, use.edge.length=FALSE, node.depth = 2)
 
     ## Match the tip labels with the ace tips
     # ace$tip <- ace$tip[match(tree_plot$tip.label, rownames(ace$tip)), ]
