@@ -74,7 +74,8 @@ plot.ACE <- function(tree_plot, ace, trees_ace, col = c("blue", "orange"), type 
 
     ## Plot the tree_plot
     # Don't plot with branch lengths to retain readability (requires plot.phylo disambiguation, I think)
-    plot(tree_plot, cex = tip.size, align.tip.label= 4, use.edge.length=FALSE, node.depth = 2)
+    ## ATTN: THOMAS: See if there is a way to adjust tip labels so they aren't overlapped by the pies.
+    plot(tree_plot, cex = tip.size, use.edge.length=FALSE, node.depth = 2)
 
     ## Match the tip labels with the ace tips
     # ace$tip <- ace$tip[match(tree_plot$tip.label, rownames(ace$tip)), ]
