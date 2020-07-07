@@ -1,0 +1,221 @@
+tip.size = 0.5
+all_mrcas <- mrca(tree, full = TRUE)
+all_mrcas
+dim(all_mrcas)
+Ntip(tree)
+Nnode(tree)
+?mrca
+library(phytools)
+?findMRCA
+tree$edge
+?extract.clade
+extract.clade(tree, node = 1)
+tree
+extract.clade(tree, node = 2)
+extract.clade(tree, node = Ntip(tree) + 1)
+extract.clade(tree, node = Ntip(tree) + 2)
+extract.clade(tree, node = Ntip(tree) + 5)
+plot(tree)
+nodelabels(cex = 0.5)
+121-95
+extract.clade(tree, node = Ntip(tree) + 26)
+test <- extract.clade(tree, node = Ntip(tree) + 26)
+plot(test)
+clade <- extract.clade(tree, node = Ntip(tree) + 26)
+?tips
+getMRCA(clade, tip = clade$tip.label)
+plot(clade)
+get.tips.clade <- function(node, tree) {#
+        return(extract.clade(tree, node = Ntip(tree) + node)$tip.label)#
+    }
+all_tips <- lapply(as.list(1:Nnode(tree)), get.tips.clade, tree)
+tree_plot <- tree
+tree_plot
+tree_ace <- pars_impweigh_trees[[1]]
+tree_ace
+## Extract the tips per clade#
+        get.tips.clade <- function(node, tree_plot) {#
+            return(extract.clade(tree_plot, node = Ntip(tree_plot) + node)$tip.label)#
+        }#
+#
+        ## Get all tips#
+        all_tips <- lapply(as.list(1:Nnode(tree_plot)), get.tips.clade, tree_plot)
+nodes_interest <- lapply(all_tips, getMRCA, phy = tree_ace)
+unlist(nodes_interest)
+length(unlist(nodes_interest))
+length(unlist(nodes_interest)) == Nnode(tree_plot)
+nodes_interest <- unlist(lapply(all_tips, getMRCA, phy = tree_ace))
+nodes_interest <- unlist(lapply(all_tips, getMRCA, phy = tree_ace)) - Ntip(tree_plot)
+ace
+ace <- ace$ER
+names(ace)
+lapply(ace, function(x, nodes) return(x$node[nodes,1]), nodes = nodes_interest)
+do.call(rbind, lapply(ace, function(x, nodes) return(x$node[nodes,1]), nodes = nodes_interest))
+apply(noed_values, 2, median)
+the
+node_values <- do.call(rbind, lapply(ace, function(x, nodes) return(x$node[nodes,1]), nodes = nodes_interest))
+apply(node_values, 2, median)
+get.node.ace <- function(ace, tree_plot, tree_ace) {#
+        ## Extract the tips per clade#
+        get.tips.clade <- function(node, tree_plot) {#
+            return(extract.clade(tree_plot, node = Ntip(tree_plot) + node)$tip.label)#
+        }#
+#
+        ## Get all tips#
+        all_tips <- lapply(as.list(1:Nnode(tree_plot)), get.tips.clade, tree_plot)#
+#
+        ## Get the nodes of interest in the tree_ace#
+        nodes_interest <- unlist(lapply(all_tips, getMRCA, phy = tree_ace)) - Ntip(tree_plot)#
+#
+        ## Get the nodes from the ace table#
+        node_values <- do.call(rbind, lapply(ace, function(x, nodes) return(x$node[nodes,1]), nodes = nodes_interest))#
+#
+        ## Calculate the median for all these values#
+        return(apply(node_values, 2, median))#
+    }
+plot(tree_plot)
+plot(tree_plot, cex = tip.size)
+get.node.ace(ace, tree_plot, tree_ace)
+tiplabels(pie = ace[[1]]$tip[,1], piecol = col, cex = type.size)
+nodelabels(pie = get.node.ace(ace, tree_plot, tree_ace), piecol = col, cex = type.size)
+pars_impweigh_trees[[1]]
+trees_ace = pars_impweigh_trees
+tree_plot = ladderize(pars_impweigh_conse[[1]])
+ace = ace_pars_impweigh_trees$ARD
+getMRCA
+nodes_interest
+all_tips
+test <- mapply(getMRCA, trees_ace, all_tips, SIMPLIFY = FALSE)
+?getMRCA
+tips <- tree_ace
+tips <- all_tios
+tips <- all_tips
+test <- unlist(lapply(tips, function(tip, phy) getMRCA(phy, tip), phy = tree_ace))
+test
+Ntip(tree_plot)
+phy - trees_ace[[1]]
+phy <- trees_ace[[1]]
+phy
+unlist(lapply(tips, function(tip, phy) getMRCA(phy, tip), phy = phy)) - Ntip(phy)
+get.MRCAs <- function(phy, tips) {#
+            return(unlist(lapply(tips, function(tip, phy) getMRCA(phy, tip), phy = phy)) - Ntip(phy))#
+        }
+lapply(trees_ace, get.MRCAs, tips = all_tips)
+nodes_interest <- lapply(trees_ace, get.MRCAs, tips = all_tips)
+one_ace <- ace[[1]]
+nodes_list <- lapply(trees_ace, get.MRCAs, tips = all_tips)
+nodes <- nodes_list[[1]]
+nodes
+one_ace$node[nodes, 1]
+get.ace <- function(one_ace, nodes) {return(one_ace$node[nodes, 1])}
+do.call(rbind, mapply(get.ace, ace, nodes_list, SIMPLIFY = FALSE))
+get.node.ace <- function(ace, tree_plot, trees_ace) {#
+        ## Extract the tips per clade#
+        get.tips.clade <- function(node, tree_plot) {#
+            return(extract.clade(tree_plot, node = Ntip(tree_plot) + node)$tip.label)#
+        }#
+#
+        ## Get all tips#
+        all_tips <- lapply(as.list(1:Nnode(tree_plot)), get.tips.clade, tree_plot)#
+#
+        ## Get the nodes of interest in the tree_ace#
+        get.MRCAs <- function(phy, tips) {#
+            return(unlist(lapply(tips, function(tip, phy) getMRCA(phy, tip), phy = phy)) - Ntip(phy))#
+        }#
+        nodes_list <- lapply(trees_ace, get.MRCAs, tips = all_tips)#
+#
+        ## Getting the ace values per nodes#
+        get.ace <- function(one_ace, nodes) {return(one_ace$node[nodes, 1])}#
+#
+        ## Get the median values for these nodes#
+        return(apply(do.call(rbind, mapply(get.ace, ace, nodes_list, SIMPLIFY = FALSE)), 2, median))#
+    }
+plot.ACE <- function(tree_plot, ace, trees_ace, col = c("blue", "orange"), type = "pie", type.size = 0.5, tip.size = 0.5, state.names, legend.pos, ...) {#
+#
+    ## Plot the tree_plot#
+    plot(tree_plot, cex = tip.size, ...)#
+#
+    ## Match the tip labels with the ace tips#
+    # ace$tip <- ace$tip[match(tree_plot$tip.label, rownames(ace$tip)), ]#
+#
+    ## Node in tree_plots#
+    get.node.ace <- function(ace, tree_plot, trees_ace) {#
+        ## Extract the tips per clade#
+        get.tips.clade <- function(node, tree_plot) {#
+            return(extract.clade(tree_plot, node = Ntip(tree_plot) + node)$tip.label)#
+        }#
+#
+        ## Get all tips#
+        all_tips <- lapply(as.list(1:Nnode(tree_plot)), get.tips.clade, tree_plot)#
+#
+        ## Get the nodes of interest in the tree_ace#
+        get.MRCAs <- function(phy, tips) {#
+            return(unlist(lapply(tips, function(tip, phy) getMRCA(phy, tip), phy = phy)) - Ntip(phy))#
+        }#
+        nodes_list <- lapply(trees_ace, get.MRCAs, tips = all_tips)#
+#
+        ## Getting the ace values per nodes#
+        get.ace <- function(one_ace, nodes) {return(one_ace$node[nodes, 1])}#
+#
+        ## Get the median values for these nodes#
+        return(apply(do.call(rbind, mapply(get.ace, ace, nodes_list, SIMPLIFY = FALSE)), 2, median))#
+    }#
+#
+    ## Add the nodes and tips values#
+    if(type == "pie") {#
+        tiplabels(pie = ace[[1]]$tip[,1], piecol = col, cex = type.size)#
+        nodelabels(pie = get.node.ace(ace, tree_plot, trees_ace), piecol = col, cex = type.size)#
+    }#
+#
+    if(type == "thermo") {#
+        tiplabels(thermo = ace[[1]]$tip[,1], piecol = col, cex = type.size)#
+        nodelabels(thermo = get.node.ace(ace, tree_plot, trees_ace), piecol = col, cex = type.size)#
+    }#
+#
+    ## Add the legend#
+    if(missing(state.names)) {#
+        legend_text <- paste("state", colnames(ace$tip))#
+    } else {#
+        legend_text <- state.names#
+    }#
+    if(missing(legend.pos)) {#
+        legend.pos <- "bottomleft"#
+    }#
+#
+    if(!is.null(legend.pos)) {#
+        legend(legend.pos, legend = legend_text, pch = 19, col = col, title = "Probabilities:")#
+    }#
+}
+## Plotting a nicer tree#
+plot.ACE(tree_plot = ladderize(pars_impweigh_conse[[1]]),#
+         use.edge.length = FALSE,#
+         label.offset = 2,#
+         tip.size = 0.8,#
+         type.size = 0.8,#
+         ace = ace_pars_impweigh_trees$ARD,#
+         trees_ace = pars_impweigh_trees,#
+         main = paste0("Endochondral bone estimation\n(parsimony implied weights - ARD)"),#
+         state.names = c("Absent", "Present")#
+         )
+ace[[1]]$tip[,1]
+tree_plot$tip.label
+match(tree_plot$tip.label, names(ace[[1]]$tip[,1]))
+ace[[1]]$tip[,1][match(tree_plot$tip.label, names(ace[[1]]$tip[,1]))]
+setwd("/Users/TGuillerme/Projects/Minininja/ACE_analysis")
+set.seed(42)#
+## Replacing the spaces in the polymorphisms (e.g. {0 1} -> {01})#
+system("sed -E 's/{([0-9]) /{\\1/g' ../Data/Minjinia_matrix.nex > ../Data/Minjinia_matrix.tmp")#
+## This creates a Minjinia_matrix.tmp file that's removed a couple of lines below#
+#
+## The matrix#
+matrix <- do.call(rbind, read.nexus.data("../Data/Minjinia_matrix.tmp"))#
+#
+## Remove the temporary file#
+system("rm ../Data/Minjinia_matrix.tmp")
+rownames(matrix)
+wrong_label <- grep("Ligulalepis", rownames(matrix))
+wrong_label
+remove.packages("castor")
+install.packages("~/Downloads/castor_1.5.7.tar.gz", repos = NULL, type="source")
+library(castor)
+?castor
