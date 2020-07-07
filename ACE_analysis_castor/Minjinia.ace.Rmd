@@ -129,7 +129,8 @@ ace_baye_unpa_conse     <- run.models(baye_unpa_conse, matrix)
 
 ## Extracting the models informations
 
-Extracting the AICs, logged likelihood (global) and the scaled likelihood for each state at the node of interest (MRCA between _Minjinia_ and _Helodus_) for all the ancestral character estimations.s
+Extracting the AICs, logged likelihood (global) and the scaled likelihood for each state at the node of interest (MRCA between _Minjinia_ and _Helodus_) for all the ancestral character estimations.
+<!-- @TG: It wouldn't be wrong to also plot this for the MRCA between Eusthenopteron and Helodus, as that node is also relevant. -->
 
 ```{r, echo = FALSE}
 ## Function for extracting the values of a list of ACEs
