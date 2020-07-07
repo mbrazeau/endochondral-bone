@@ -42,12 +42,12 @@ pars_impweigh_conse <- read.nexus("../Data/parsimony_trees/piwe3consens.tre")
 pars_standard_conse <- read.nexus("../Data/parsimony_trees/stdparsconsens.tre")
 pars_impweigh_trees <- read.nexus("../Data/parsimony_trees/piwe3brlens.tre")
 pars_standard_trees <- read.nexus("../Data/parsimony_trees/stdparsbrlens.tre")
-baye_part_conse     <- read.nexus("../Data/partitioned/Minjinia_master_MrBayes_partitioned.nex.con.tre")
-baye_unpa_conse     <- read.nexus("../Data/unpartitioned/Minjinia_master_MrBayes_unpartitioned.nex.con.tre")
-baye_part_trees1    <- read.nexus("../Data/partitioned/Minjinia_master_MrBayes_partitioned.nex.run1.t")
-baye_part_trees2    <- read.nexus("../Data/partitioned/Minjinia_master_MrBayes_partitioned.nex.run2.t")
-baye_unpa_trees1    <- read.nexus("../Data/unpartitioned/Minjinia_master_MrBayes_unpartitioned.nex.run1.t")
-baye_unpa_trees2    <- read.nexus("../Data/unpartitioned/Minjinia_master_MrBayes_unpartitioned.nex.run2.t")
+baye_part_conse     <- read.nexus("../Data/partitioned/Minjinia_MrBayes_partitioned.nex.con.tre")
+baye_unpa_conse     <- read.nexus("../Data/unpartitioned/Minjinia_MrBayes_unpartitioned.nex.con.tre")
+baye_part_trees1    <- read.nexus("../Data/partitioned/Minjinia_MrBayes_partitioned.nex.run1.t")
+baye_part_trees2    <- read.nexus("../Data/partitioned/Minjinia_MrBayes_partitioned.nex.run2.t")
+baye_unpa_trees1    <- read.nexus("../Data/unpartitioned/Minjinia_MrBayes_unpartitioned.nex.run1.t")
+baye_unpa_trees2    <- read.nexus("../Data/unpartitioned/Minjinia_MrBayes_unpartitioned.nex.run2.t")
 
 ## Make everything multiphylo
 as.multiPhylo <- function(tree) {
