@@ -129,7 +129,7 @@ ace_baye_unpa_conse     <- run.models(baye_unpa_conse, matrix)
 
 ## Extracting the models informations
 
-Extracting the AICs, logged likelihood (global) and the scaled likelihood for each state at the node of interest (MRCA between _Mininjinia_ and _Helodus_) for all the ancestral character estimations.s
+Extracting the AICs, logged likelihood (global) and the scaled likelihood for each state at the node of interest (MRCA between _Minjinia_ and _Helodus_) for all the ancestral character estimations.s
 
 ```{r, echo = FALSE}
 ## Function for extracting the values of a list of ACEs
@@ -492,7 +492,7 @@ plot.ACE(tree_plot = ladderize(baye_unpa_conse[[1]]),
          label.offset = 2,
          tip.size = 0.8,
          type.size = 0.8,
-         ace = ace_baye_unpa_trees$ER,
+         ace = ace_baye_unpa_trees$,
          trees_ace = baye_unpa_trees,
          main = paste0("Endochondral bone estimation\n(Bayesian unpartitioned - ER)"),
          state.names = c("Absent", "Present")
