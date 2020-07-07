@@ -150,8 +150,9 @@ get.log.lik <- function(data) {
 }
 ## Get the node likelihoods
 get.node.lik <- function(data, tree) {
-    node <- getMRCA(tree, tip = c("Minjinia", "Helodus"))-Ntip(tree)
-    return(data$nodes[node, ])
+    node_Minjinia <- getMRCA(tree, tip = c("Minjinia", "Helodus"))-Ntip(tree)
+    node_Eusthenopteron <- getMRCA(tree, tip = c("Eusthenopteron", "Helodus"))-Ntip(tree)
+    return(data$nodes[c(node_Minjinia, node_Eusthenopteron), ])
 }
 
 ## Extract everything form the results
@@ -164,11 +165,17 @@ extract.results <- function(ace_results, trees) {
     ## Node lik.
     nodlik <- list("ER"  = mapply(get.node.lik, ace_results$ER, trees),
                    "ARD" = mapply(get.node.lik, ace_results$ARD, trees))
-    nodlik0 <- lapply(nodlik, function(x) return(x[1,]))
-    nodlik1 <- lapply(nodlik, function(x) return(x[2,]))
+    nodlik_Minjinia0 <- lapply(nodlik, function(x) return(x[1,]))
+    nodlik_Minjinia1 <- lapply(nodlik, function(x) return(x[2,]))
+    nodlik_Eusthenopteron0 <- lapply(nodlik, function(x) return(x[3,]))
+    nodlik_Eusthenopteron1 <- lapply(nodlik, function(x) return(x[4,]))
 
     return(list("log.lik." = loglik, "AIC" = AICs,
-                "Absent" = nodlik0, "Present" = nodlik1))
+                "Minjinia:Gnathostome absent" = nodlik_Minjinia0,
+                "Minjinia:Gnathostome present" = nodlik_Minjinia1,
+                "Gnathostome crown absent" = nodlik_Eusthenopteron0,
+                "Gnathostome crown present" = nodlik_Eusthenopteron1
+                ))
 }
 
 results_pars_impweigh <- extract.results(ace_pars_impweigh_trees, pars_impweigh_trees)
@@ -216,10 +223,10 @@ all_results <- rbind(table_pars_impweigh, table_pars_standard, table_baye_part, 
 
 ## Add the models, trees nodes
 models <- rownames(all_results)
-trees <- c("Parsimony Implied Weights", "", "", rep("", 3*3),
-           "Parsimony Equal Weights", "", "", rep("", 3*3),
-           "Bayesian Partitioned", "", "", rep("", 3*3),
-           "Bayesian Unpartitioned", "", "", rep("", 3*3))
+trees <- c("Parsimony Implied Weights", "", "", rep("", 3*5),
+           "Parsimony Equal Weights", "", "", rep("", 3*5),
+           "Bayesian Partitioned", "", "", rep("", 3*5),
+           "Bayesian Unpartitioned", "", "", rep("", 3*5))
 nodes <- c("Minjinia:crown gnathostomes", rep("", nrow(all_results)-1))
 
 
@@ -228,36 +235,62 @@ full_results <- cbind(do.call(cbind, list(trees, models)), all_results)
 rownames(full_results) <- NULL
 colnames(full_results)[1:3] <- c("Trees", "Model", "Median")
 
+# ## Neat results (old)
+# neat_results <- round(do.call(rbind,list(summary.results(results_pars_impweigh, full = FALSE),
+#                                    summary.results(results_pars_standard, full = FALSE),
+#                                    summary.results(results_baye_part, full = FALSE),
+#                                    summary.results(results_baye_unpa, full = FALSE))), digits = 2)
+# ## Add log lik ratio
+# log.ratio <- function(logs, neat_results) return(c(2*abs(diff(neat_results[logs,1])), ""))
+# neat_results <- cbind(cbind("log.lik."  = neat_results[, 1],
+#                             "log.ratio" = unlist(lapply(list(c(1,2), c(3,4), c(5,6), c(7,8)), log.ratio, neat_results))),
+#                             neat_results[,-1])
+
+# models <- rownames(neat_results)
+# trees <- c("Parsimony Implied Weights", "",
+#            "Parsimony Equal Weights", "",
+#            "Bayesian Partitioned", "",
+#            "Bayesian Unpartitioned", "")
+# neat_results <- cbind(do.call(cbind, list(trees, models)), neat_results)
+# rownames(neat_results) <- NULL
+# colnames(neat_results)[1:2] <- c("Trees", "Model")
 
 
-## Neat results
-neat_results <- round(do.call(rbind,list(summary.results(results_pars_impweigh, full = FALSE),
-                                   summary.results(results_pars_standard, full = FALSE),
-                                   summary.results(results_baye_part, full = FALSE),
-                                   summary.results(results_baye_unpa, full = FALSE))), digits = 2)
-## Add log lik ratio
-log.ratio <- function(logs, neat_results) return(c(2*abs(diff(neat_results[logs,1])), ""))
-neat_results <- cbind(cbind("log.lik."  = neat_results[, 1],
-                            "log.ratio" = unlist(lapply(list(c(1,2), c(3,4), c(5,6), c(7,8)), log.ratio, neat_results))),
-                            neat_results[,-1])
+## Neat results (to be similar format than in the manuscript)
+parsimony <- round(summary.results(results_pars_standard, full = FALSE), 2)
+bayesian  <- round(summary.results(results_baye_unpa, full = FALSE), 2)
 
-models <- rownames(neat_results)
-trees <- c("Parsimony Implied Weights", "",
-           "Parsimony Equal Weights", "",
-           "Bayesian Partitioned", "",
-           "Bayesian Unpartitioned", "")
-neat_results <- cbind(do.call(cbind, list(trees, models)), neat_results)
-rownames(neat_results) <- NULL
-colnames(neat_results)[1:2] <- c("Trees", "Model")
+## Get the node values and tree diagnosis
+neat_table <- cbind(## Tree diagnosis
+                    rbind(rbind(parsimony[,1:2], matrix("", 2, 2)),
+                          rbind(bayesian[,1:2], matrix("", 2, 2))
+                          ),
+                    ## Node values
+                    rbind(rbind(parsimony[,3:4], parsimony[,5:6]),
+                          rbind(bayesian[,3:4], bayesian[,5:6])
+                          )
+                    )
+colnames(neat_table)[c(3,4)] <- c("Absent", "Present")
+rownames(neat_table) <- NULL
 
+## Add the log.lik rations
+log.ratio <- function(logs, neat_results) return(c(2*abs(diff(as.numeric(neat_results[logs,1]))), rep("", 3)))
+neat_table <- cbind(cbind("log.lik."  = neat_table[, 1],
+                            "log.ratio" = unlist(lapply(list(c(1,2), c(5,6)), log.ratio, neat_table))),
+                            neat_table[,-1])
 
-
+## Add the model, node and tree names
+neat_table <- cbind("trees" = c("Parsimony", rep("", 3), "Bayesian", rep("", 3)),
+                    "model" = rep(c("ER", "ARD"), 4),
+                    neat_table[, c(1,2,3)],
+                    "node"  = rep(c("Minjinia:Gnathostomes", "", "Crown Gnathostomes", ""), 2),
+                    neat_table[, -c(1,2,3)])
 
 ## Results tables
 caption1 <- "Tree distribution (100) ancestral states estimation results. ER = Equal rates model; ARD = All Rates Different model. The columns AIC and log.lik represent the median AIC and log.lik across the 100 parsimony and bayesian trees (for both models). The columns Absent and Present represent the median scaled likelihood for the endochondral bone state."
 caption2 <- "The 2.5%, 25%, 75% and 97.5% represent the confidence intervals values for each estimated parameter (log.lik, AIC, Present and Absent endochondral bone)."
 knitr::kable(full_results, caption = paste(caption1, caption2))
-knitr::kable(neat_results, caption = caption1)
+knitr::kable(neat_table, caption = caption1)
 ```
 
 
@@ -266,7 +299,12 @@ knitr::kable(neat_results, caption = caption1)
 
 ## Get the tables
 write(knitr::kable(full_results, digits = 2, format = "latex"), "full_results.tex")
-write(knitr::kable(neat_results, digits = 2, format = "latex"), "neat_results.tex")
+write(knitr::kable(neat_table, digits = 2, format = "latex"), "neat_results.tex")
+
+## Make a pandoc converter snippet
+system("echo \"pandoc -i table_latex_convert.tex -o result.tables.docx\" > run.pandoc.sh")
+system("sh run.pandoc.sh")
+system("rm run.pandoc.sh")
 ```
 
 ## Visualisation on the consensus trees
@@ -496,7 +534,7 @@ plot.ACE(tree_plot = ladderize(baye_unpa_conse[[1]]),
          label.offset = 2,
          tip.size = 0.8,
          type.size = 0.8,
-         ace = ace_baye_unpa_trees$,
+         ace = ace_baye_unpa_trees$ER,
          trees_ace = baye_unpa_trees,
          main = paste0("Endochondral bone estimation\n(Bayesian unpartitioned - ER)"),
          state.names = c("Absent", "Present")
