@@ -15,6 +15,9 @@ output:
 ```{r, echo = FALSE}
 library(ape)
 library(knitr)
+## Optional install of castor 1.5.7
+#castorurl<-"https://cran.r-project.org/src/contrib/Archive/castor/castor_1.5.7.tar.gz"
+#install.packages(castorurl, repos=NULL, type="source")
 library(castor)
 source("ACE.R")
 ```
