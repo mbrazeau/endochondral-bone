@@ -27,8 +27,8 @@ run.ACE <- function(tree, character, algorithm, model = "ER") {
         taxa_char <- as.numeric(tokens %in% taxa)
         ## If no match, make equiprobalbe
         if(sum(taxa_char) == 0) {
-            #return(rep(1/length(tokens), length(tokens)))
-            return(rep(1.0, length(tokens))) # This is the corrected tip partials
+            return(rep(1/length(tokens), length(tokens)))
+            #return(rep(1.0, length(tokens))) # This is the corrected tip partials
         } else {
             return(taxa_char)
         }
@@ -47,7 +47,7 @@ run.ACE <- function(tree, character, algorithm, model = "ER") {
         transition <- ancestral_estimates$Q
     }
     if(algorithm == "castor") {
-        ancestral_estimates <- castor::asr_mk_model(tree = tree, tip_states = NULL, Nstates = length(na.omit(token_value)), rate_model = model, Ntrials = 2, tip_priors = state_table)
+        ancestral_estimates <- castor::asr_mk_model(tree = tree, tip_states = NULL, Nstates = length(na.omit(token_value)), rate_model = model, Ntrials = 3, tip_priors = state_table)
         ## Get the node probabilities
         ancestral_nodes <- ancestral_estimates$ancestral_likelihoods
         ## Get the model likelihood
@@ -75,7 +75,7 @@ plot.ACE <- function(tree_plot, ace, trees_ace, col = c("blue", "orange"), type 
     ## Plot the tree_plot
     # Don't plot with branch lengths to retain readability (requires plot.phylo disambiguation, I think)
     ## ATTN: THOMAS: See if there is a way to adjust tip labels so they aren't overlapped by the pies.
-    plot(tree_plot, cex = tip.size, use.edge.length=FALSE, node.depth = 2)
+    plot(tree_plot, cex = 1.0, use.edge.length=FALSE, label.offset=1.0, node.depth = 2)
 
     ## Match the tip labels with the ace tips
     # ace$tip <- ace$tip[match(tree_plot$tip.label, rownames(ace$tip)), ]
@@ -105,7 +105,7 @@ plot.ACE <- function(tree_plot, ace, trees_ace, col = c("blue", "orange"), type 
 
     ## Add the nodes and tips values
     if(type == "pie") {
-        tiplabels(pie = ace[[1]]$tip[,1][match(tree_plot$tip.label, names(ace[[1]]$tip[,1]))], piecol = col, cex = type.size)
+        tiplabels(pie = ace[[1]]$tip[,1][match(tree_plot$tip.label, names(ace[[1]]$tip[,1]))], piecol = col, cex = 0.5)
         nodelabels(pie = get.node.ace(ace, tree_plot, trees_ace), piecol = col, cex = type.size)
     }
 
